@@ -16,5 +16,6 @@ module.exports = {
    mongo: {
       uri: 'mongodb://now:samcom84@162.250.121.171:27777/now'
 
-   }
+   },
+   
 };

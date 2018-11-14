@@ -1,5 +1,4 @@
 'use strict';
-Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
 var controller = require("./user.controller");
 var auth = require("../../auth/auth.service");
@@ -15,5 +14,4 @@ router.post('/verifytoken', controller.verifytoken);
 router.post('/updatepassword', auth.isAuthenticated(), controller.updatePassword);
 /* For mobile side */
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
-/* END */
 module.exports = router;

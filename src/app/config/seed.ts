@@ -25,4 +25,4 @@ User.create(admin, function (err, user) {
     } else {
         console.log("Default Admin Created");
     }
-})
+});
