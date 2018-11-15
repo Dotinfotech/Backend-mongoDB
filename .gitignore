@@ -76,7 +76,10 @@ typings/
 .fusebox/
 
 #built folder
-/built
+built/**/*
 
 #package-lock.json file
 package-lock.json
+
+#vscode file
+.vscode/

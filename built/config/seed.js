@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // Insert seed models below
 var user_model_1 = require("../models/user.model");
 // Create Default Admin
-var admin = new user_model_1.default({
+var admin = new user_model_1.default.User({
     first_name: 'Admin',
     last_name: 'now',
     user_name: "admin",
@@ -18,7 +18,7 @@ var admin = new user_model_1.default({
     phone_number: '9898245452',
     is_verify: true
 });
-user_model_1.default.create(admin, function (err, user) {
+user_model_1.default.User.create(admin, function (err, user) {
     if (err) {
         console.log("Error creating default admin : " + err);
     }

@@ -4,6 +4,7 @@ var environment_1 = require("../config/environment");
 var jwt = require("jsonwebtoken");
 var expressJwt = require("express-jwt");
 var compose = require("composable-middleware");
+// import { default as User } from '../models/user.model';
 var user_model_1 = require("../models/user.model");
 var validateJwt = expressJwt({ secret: environment_1.default.secrets.session });
 /**
@@ -22,7 +23,7 @@ function isAuthenticated() {
     })
         // Attach user to request
         .use(function (req, res, next) {
-        user_model_1.default.findById(req.user._id, function (err, user) {
+        user_model_1.default.User.findById(req.user._id, function (err, user) {
             if (err)
                 return next(err);
             if (!user)

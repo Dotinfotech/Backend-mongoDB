@@ -13,6 +13,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 /* Update password from admin panel */
 function updatePassword(req, res) {
     var User = mongoose.model("User");
+    console.log('user: ' + User);
     User.findOne({ _id: req.user._id }, function (err, user) {
         if (err) {
             res.send(common_1.send_response(null, true, "User not found!"));
@@ -26,7 +27,7 @@ function updatePassword(req, res) {
                         res.send(common_1.send_response(null, true, common_1.parse_error(err)));
                     }
                     else {
-                        res.send(common_1.send_response(null, false, saved));
+                        res.send(common_1.send_response(null, false, "password updated!"));
                     }
                 });
             }
@@ -79,7 +80,13 @@ function forgotpassword(req, res) {
                 user: user._id,
                 token: hash
             };
-            var email_data = new ForgotPassword(email_data);
+            var email_data = new ForgotPassword(email_data, function (err) {
+                if (err) {
+                    console.log('data not pushed in database');
+                }
+                else
+                    res.send(common_1.send_response(null, false, "Data pushed in database!"));
+            });
             ForgotPassword.create(email_data, function (error, data) {
                 var mail_data = {
                     to: user.email,
@@ -87,7 +94,7 @@ function forgotpassword(req, res) {
                     subject: "Forgot Password",
                     text: "Click the following link to reset the password: " +
                         local_env_1.default.CLIENT_URL +
-                        "/reset_password.html?token=" +
+                        "/resetPassword?token=" +
                         hash
                 };
                 sgMail.send(mail_data).then(function (sent) {
@@ -113,6 +120,7 @@ function resetPassword(req, res) {
     var User = mongoose.model("User");
     var Forgotpassword = mongoose.model("Forgotpassword");
     var params = req.body;
+    console.log("params: " + params);
     if (!params || !params.token || !params.new_password) {
         res.send(common_1.send_response(null, true, "Validation error!"));
     }
@@ -126,15 +134,15 @@ function resetPassword(req, res) {
                     res.send(common_1.send_response(null, true, err.message));
                 }
                 else {
-                    console.log(forgot.user);
+                    console.log("forgot: " + forgot.user);
                     User.findOne({ _id: forgot.user }).exec(function (err, user) {
-                        console.log(user);
                         if (err) {
                             res.send(common_1.send_response(null, true, err.message));
                         }
                         else {
                             if (user) {
                                 user.password = params.new_password;
+                                console.log('user.password is(changed):' + user.password);
                                 user.save(function (err, user) {
                                     if (err) {
                                         res.send(common_1.send_response(null, true, err.message));
@@ -150,8 +158,9 @@ function resetPassword(req, res) {
                                                 user = user.toJSON();
                                                 // delete password key
                                                 delete user.password;
-                                                res.send(common_1.send_response(user, false, "Your password is changed successfully now you can login with new password from the app."));
-                                                res.send(common_1.send_response(user));
+                                                res.send(common_1.send_response(null, false, "Your password is changed successfully now you can login with new password from the app."));
+                                                // res.send(send_response(user, false, "password changed!"));
+                                                console.log('Password successfully changed!!');
                                             }
                                         });
                                     }
@@ -271,12 +280,23 @@ function register_user(req, res) {
                 .update(user._id + user.email + user._id + today)
                 .digest("hex");
             var mail_data = {
-                replace_var: {
-                    username: user.first_name
-                },
-                send_to: user.email,
-                subject: "Welcome!"
+                to: user.email,
+                from: process.env.EMAIL_ID,
+                subject: "Welcome " + user.first_name + "!",
+                text: "Welcome to our website!"
             };
+            sgMail.send(mail_data).then(function (sent) {
+                if (sent) {
+                    res.json({ data: null, is_error: false, message: "Mail sent!" });
+                }
+                else {
+                    res.json({
+                        data: null,
+                        is_error: true,
+                        message: "Mail sending failed!"
+                    });
+                }
+            });
             var token = auth.signToken(user._id, user.role);
             var data = { user: user };
             res.send(common_1.send_response(null, true, "Register success. please check your inbox"));

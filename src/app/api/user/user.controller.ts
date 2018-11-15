@@ -17,6 +17,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 /* Update password from admin panel */
 export function updatePassword(req, res) {
   var User = mongoose.model("User");
+  console.log('user: '+User);
   User.findOne({ _id: req.user._id }, function(err, user) {
     if (err) {
       res.send(send_response(null, true, "User not found!"));
@@ -28,7 +29,7 @@ export function updatePassword(req, res) {
           if (err) {
             res.send(send_response(null, true, parse_error(err)));
           } else {
-            res.send(send_response(null, false, saved));
+            res.send(send_response(null, false, "password updated!"));
           }
         });
       } else {
@@ -62,6 +63,7 @@ export function forgotpassword(req, res) {
   var User = mongoose.model("User");
   var ForgotPassword = mongoose.model("Forgotpassword");
   var data = req.body;
+
   User.findOne({ email: data.email }, function(err, user) {
     if (user == null) {
       res.json({ data: null, is_error: true, message: "User not found!" });
@@ -79,7 +81,13 @@ export function forgotpassword(req, res) {
         token: hash
       };
 
-      var email_data = new ForgotPassword(email_data);
+      var email_data = new ForgotPassword(email_data, function(err) {
+        if (err){ 
+        console.log('data not pushed in database');
+        }
+        else 
+          res.send(send_response(null, false, "Data pushed in database!"));
+      });
 
       ForgotPassword.create(email_data, function(error, data) {
         var mail_data = {
@@ -89,7 +97,7 @@ export function forgotpassword(req, res) {
           text:
             "Click the following link to reset the password: " +
             config.CLIENT_URL +
-            "/reset_password.html?token=" +
+            "/resetPassword?token=" +
             hash
         };
         sgMail.send(mail_data).then(sent => {
@@ -116,6 +124,8 @@ export function resetPassword(req, res) {
   var Forgotpassword = mongoose.model("Forgotpassword");
   var params = req.body;
 
+  console.log("params: "+params);
+
   if (!params || !params.token || !params.new_password) {
     res.send(send_response(null, true, "Validation error!"));
   } else {
@@ -131,14 +141,15 @@ export function resetPassword(req, res) {
         if (err) {
           res.send(send_response(null, true, err.message));
         } else {
-          console.log(forgot.user);
+          console.log("forgot: "+forgot.user);
           User.findOne({ _id: forgot.user }).exec(function(err, user) {
-            console.log(user);
+            
             if (err) {
               res.send(send_response(null, true, err.message));
             } else {
               if (user) {
                 user.password = params.new_password;
+                console.log('user.password is(changed):'+user.password);
                 user.save(function(err, user) {
                   if (err) {
                     res.send(send_response(null, true, err.message));
@@ -154,12 +165,13 @@ export function resetPassword(req, res) {
                         delete user.password;
                         res.send(
                           send_response(
-                            user,
+                            null,
                             false,
                             "Your password is changed successfully now you can login with new password from the app."
                           )
                         );
-                        res.send(send_response(user));
+                        // res.send(send_response(user, false, "password changed!"));
+                        console.log('Password successfully changed!!')
                       }
                     });
                   }
@@ -275,13 +287,22 @@ export function register_user(req, res) {
         .digest("hex");
 
       var mail_data = {
-        replace_var: {
-          username: user.first_name
-        },
-        send_to: user.email,
-        subject: "Welcome!"
+        to: user.email,
+        from: process.env.EMAIL_ID,
+        subject: "Welcome " + user.first_name + "!",
+        text: "Welcome to our website!"
       };
-
+      sgMail.send(mail_data).then(sent => {
+        if (sent) {
+          res.json({ data: null, is_error: false, message: "Mail sent!" });
+        } else {
+          res.json({
+            data: null,
+            is_error: true,
+            message: "Mail sending failed!"
+          });
+        }
+      });
       var token = auth.signToken(user._id, user.role);
       var data = { user: user };
       res.send(

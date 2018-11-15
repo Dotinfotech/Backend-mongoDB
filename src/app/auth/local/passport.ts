@@ -1,6 +1,7 @@
 import * as passport from 'passport';
 import * as local from 'passport-local';
 let LocalStrategy = local.Strategy;
+import models from '../../models/user.model';
 
 export function setup (User, config) {
     passport.use(new LocalStrategy({
@@ -8,7 +9,7 @@ export function setup (User, config) {
         passwordField: 'password' // this is the virtual field on the model
     },
             function (email, password, done) {
-                User.findOne({
+                models.User.findOne({
                     email: email
                 }, function (err, user) {
                     if (err)

@@ -32,6 +32,10 @@ var UserSchema = new Schema({
     last_updated: { type: Date, default: null },
     last_login: { type: Date, default: null },
 }, schemaOptions);
+var ForgotPasswordSchema = new Schema({
+    user: String,
+    token: String
+}, schemaOptions);
 UserSchema.plugin(autopopulate);
 UserSchema.plugin(mongooseHidden);
 /**
@@ -177,4 +181,9 @@ UserSchema.methods = {
         return pwd;
     }
 };
-exports.default = mongoose.model('User', UserSchema);
+// export = mongoose.model('User', UserSchema);
+// export = mongoose.model('Forgotpassword', ForgotPasswordSchema);
+exports.default = {
+    User: mongoose.model('User', UserSchema),
+    Forgotpassword: mongoose.model('Forgotpassword', ForgotPasswordSchema)
+};
