@@ -21,4 +21,4 @@ router.post('/updatepassword', auth.isAuthenticated(), controller.updatePassword
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
 /* END */
 
-module.exports = router;
+export = router;

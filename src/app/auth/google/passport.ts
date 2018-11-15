@@ -5,6 +5,8 @@ var google = require("passport-google-oauth");
 var GoogleStrategy = google.OAuth2Strategy;
 
 export function setup (User, config) {
+    config = config.default;
+
     passport.use(new GoogleStrategy({
         clientID: config.google.clientID,
         clientSecret: config.google.clientSecret,
