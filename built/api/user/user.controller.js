@@ -19,20 +19,30 @@ function updatePassword(req, res) {
             res.send(common_1.send_response(null, true, "User not found!"));
         }
         else {
-            var isAuth = user.authenticate(req.body.old_password);
-            if (isAuth === true) {
-                user.password = req.body.new_password;
-                user.save(function (err, saved) {
-                    if (err) {
-                        res.send(common_1.send_response(null, true, common_1.parse_error(err)));
-                    }
-                    else {
-                        res.send(common_1.send_response(null, false, "password updated!"));
-                    }
-                });
+            if (!req.body.old_password || !req.body.new_password || !req.body.confirm_password) {
+                res.send(common_1.send_response(null, true, "Please enter your old password and new password"));
             }
             else {
-                res.send(common_1.send_response(null, true, "Old password is wrong!"));
+                var isAuth = user.authenticate(req.body.old_password);
+                if (isAuth === true) {
+                    if (req.body.new_password !== req.body.confirm_password) {
+                        res.send(common_1.send_response(null, true, " New password and Confirm password do not match, try again!"));
+                    }
+                    else {
+                        user.password = req.body.new_password;
+                        user.save(function (err, saved) {
+                            if (err) {
+                                res.send(common_1.send_response(null, true, common_1.parse_error(err)));
+                            }
+                            else {
+                                res.send(common_1.send_response(null, false, "password updated!"));
+                            }
+                        });
+                    }
+                }
+                else {
+                    res.send(common_1.send_response(null, true, "Old password is wrong!"));
+                }
             }
         }
     });
@@ -141,30 +151,40 @@ function resetPassword(req, res) {
                         }
                         else {
                             if (user) {
-                                user.password = params.new_password;
-                                console.log('user.password is(changed):' + user.password);
-                                user.save(function (err, user) {
-                                    if (err) {
-                                        res.send(common_1.send_response(null, true, err.message));
+                                if (!params.new_password || !params.confirm_password) {
+                                    res.send(common_1.send_response(null, true, "Please enter new_password and/or confirm_password"));
+                                }
+                                else {
+                                    if (params.new_password !== params.confirm_password) {
+                                        res.send(common_1.send_response(null, true, 'Password do not match. Try again!'));
                                     }
                                     else {
-                                        forgot.is_changed = true;
-                                        forgot.save(function (err, user) {
+                                        user.password = params.new_password;
+                                        console.log('user.password is(changed):' + user.password);
+                                        user.save(function (err, user) {
                                             if (err) {
                                                 res.send(common_1.send_response(null, true, err.message));
                                             }
                                             else {
-                                                // remove model object from user
-                                                user = user.toJSON();
-                                                // delete password key
-                                                delete user.password;
-                                                res.send(common_1.send_response(null, false, "Your password is changed successfully now you can login with new password from the app."));
-                                                // res.send(send_response(user, false, "password changed!"));
-                                                console.log('Password successfully changed!!');
+                                                forgot.is_changed = true;
+                                                forgot.save(function (err, user) {
+                                                    if (err) {
+                                                        res.send(common_1.send_response(null, true, err.message));
+                                                    }
+                                                    else {
+                                                        // remove model object from user
+                                                        user = user.toJSON();
+                                                        // delete password key
+                                                        delete user.password;
+                                                        res.send(common_1.send_response(null, false, "Your password is changed successfully now you can login with new password from the app."));
+                                                        // res.send(send_response(user, false, "password changed!"));
+                                                        console.log('Password successfully changed!!');
+                                                    }
+                                                });
                                             }
                                         });
                                     }
-                                });
+                                }
                             }
                             else {
                                 res.send(common_1.send_response(null, true, "User not found!"));
@@ -265,43 +285,54 @@ exports.welcome_user = welcome_user;
 function register_user(req, res) {
     var Model = mongoose.model("User");
     var data = req.body;
-    Model.create(data, function (err, user) {
-        if (err) {
-            console.log("asaaaa");
-            res.send(common_1.send_response(null, true, common_1.parse_error(err)));
+    console.log('password: ' + data.password);
+    if (!data.email || !data.password || !data.confirm_password) {
+        res.send(common_1.send_response(null, true, "Please enter email and password"));
+    }
+    else {
+        if (data.password !== data.confirm_password) {
+            res.send(common_1.send_response(null, true, "passwords do not match!"));
         }
         else {
-            console.log("Asda");
-            var today = new Date();
-            //Generate Hash
-            var secret = "a3s5d46a5sd684asdaasdkn!@312";
-            var hash = crypto
-                .createHmac("sha256", secret)
-                .update(user._id + user.email + user._id + today)
-                .digest("hex");
-            var mail_data = {
-                to: user.email,
-                from: process.env.EMAIL_ID,
-                subject: "Welcome " + user.first_name + "!",
-                text: "Welcome to our website!"
-            };
-            sgMail.send(mail_data).then(function (sent) {
-                if (sent) {
-                    res.json({ data: null, is_error: false, message: "Mail sent!" });
+            Model.create(data, function (err, user) {
+                if (err) {
+                    console.log("asaaaa");
+                    res.send(common_1.send_response(null, true, common_1.parse_error(err)));
                 }
                 else {
-                    res.json({
-                        data: null,
-                        is_error: true,
-                        message: "Mail sending failed!"
+                    console.log("Asda");
+                    var today = new Date();
+                    //Generate Hash
+                    var secret = "a3s5d46a5sd684asdaasdkn!@312";
+                    var hash = crypto
+                        .createHmac("sha256", secret)
+                        .update(user._id + user.email + user._id + today)
+                        .digest("hex");
+                    var mail_data = {
+                        to: user.email,
+                        from: process.env.EMAIL_ID,
+                        subject: "Welcome " + user.first_name + "!",
+                        text: "Welcome to our website!"
+                    };
+                    sgMail.send(mail_data).then(function (sent) {
+                        if (sent) {
+                            res.json({ data: null, is_error: false, message: "Mail sent!" });
+                        }
+                        else {
+                            res.json({
+                                data: null,
+                                is_error: true,
+                                message: "Mail sending failed!"
+                            });
+                        }
                     });
+                    var token = auth.signToken(user._id, user.role);
+                    var data = { user: user };
+                    res.send(common_1.send_response(null, true, "Register success. please check your inbox"));
                 }
             });
-            var token = auth.signToken(user._id, user.role);
-            var data = { user: user };
-            res.send(common_1.send_response(null, true, "Register success. please check your inbox"));
         }
-    });
+    }
 }
 exports.register_user = register_user;
 /**
