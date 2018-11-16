@@ -6,7 +6,9 @@ import { default as config } from '../config/environment';
 import * as jwt from 'jsonwebtoken';
 import * as expressJwt from 'express-jwt';
 import * as compose from 'composable-middleware';
-import { default as User } from '../models/user.model';
+// import { default as User } from '../models/user.model';
+import models from '../models/user.model';
+
 var validateJwt = expressJwt({ secret: config.secrets.session });
 
 /**
@@ -26,7 +28,7 @@ export function isAuthenticated() {
         })
         // Attach user to request
         .use(function (req, res, next) {
-            User.findById(req.user._id, function (err, user) {
+            models.User.findById(req.user._id, function (err, user) {
                 if (err)
                     return next(err);
                 if (!user)
@@ -74,7 +76,3 @@ export function setTokenCookie(req, res) {
     res.redirect('/');
 }
 
-// exports.isAuthenticated = isAuthenticated;
-// exports.hasRole = hasRole;
-// exports.signToken = signToken;
-// exports.setTokenCookie = setTokenCookie;

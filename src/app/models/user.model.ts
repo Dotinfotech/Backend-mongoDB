@@ -8,6 +8,7 @@ var authTypes = ['github', 'twitter', 'facebook', 'google'];
 import * as mongoH from 'mongoose-hidden';
 let mongooseHidden = (mongoH)({defaultHidden: {password: true}});
 import * as _ from 'lodash';
+import { userInfo } from 'os';
 
 var schemaOptions = {
    toObject: {virtuals: true},
@@ -35,6 +36,12 @@ var UserSchema = new Schema({
    last_updated: {type: Date, default: null},
    last_login: {type: Date, default: null},
 
+}, schemaOptions);
+
+var ForgotPasswordSchema = new Schema({
+   
+   user: String,
+   token: String
 }, schemaOptions);
 
 UserSchema.plugin(autopopulate);
@@ -196,4 +203,11 @@ UserSchema.methods = {
    }
 };
 
-export default mongoose.model('User', UserSchema);
+// export = mongoose.model('User', UserSchema);
+
+// export = mongoose.model('Forgotpassword', ForgotPasswordSchema);
+
+export default {
+  User: mongoose.model('User', UserSchema),
+  Forgotpassword: mongoose.model('Forgotpassword', ForgotPasswordSchema)
+};

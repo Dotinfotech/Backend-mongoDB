@@ -7,7 +7,7 @@
 
 export default {
    DOMAIN: 'http://anydomainhere.com/',
-   CLIENT_URL: 'http://anydomainhere.com/',
+   CLIENT_URL: 'http://localhost:9000',
    SESSION_SECRET: "dotwhitelable-secret",
 
    FACEBOOK_ID: 'app-id',

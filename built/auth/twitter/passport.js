@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var passport = require('passport');
+var twitter = require('passport-twitter');
+var TwitterStrategy = twitter.Strategy;
 function setup(User, config) {
-    var passport = require('passport');
-    var twitter = require('passport-twitter');
-    var TwitterStrategy = twitter.Strategy;
+    config = config.default;
     passport.use(new TwitterStrategy({
         consumerKey: config.twitter.clientID,
         consumerSecret: config.twitter.clientSecret,
