@@ -97,7 +97,7 @@ export function forgotpassword(req, res) {
       var secret = "a3s5d46a5sd684asdaasdkn!@312";
       var hash = crypto
         .createHmac("sha256", secret)
-        .update(user._id + user.email + user._id + today)
+        .update(user._id + user.email + user._id + today)        
         .digest("hex");
 
       var email_data = {

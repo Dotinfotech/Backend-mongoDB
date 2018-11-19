@@ -13,13 +13,15 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 /* Update password from admin panel */
 function updatePassword(req, res) {
     var User = mongoose.model("User");
-    console.log('user: ' + User);
+    console.log("user: " + User);
     User.findOne({ _id: req.user._id }, function (err, user) {
         if (err) {
             res.send(common_1.send_response(null, true, "User not found!"));
         }
         else {
-            if (!req.body.old_password || !req.body.new_password || !req.body.confirm_password) {
+            if (!req.body.old_password ||
+                !req.body.new_password ||
+                !req.body.confirm_password) {
                 res.send(common_1.send_response(null, true, "Please enter your old password and new password"));
             }
             else {
@@ -92,7 +94,7 @@ function forgotpassword(req, res) {
             };
             var email_data = new ForgotPassword(email_data, function (err) {
                 if (err) {
-                    console.log('data not pushed in database');
+                    console.log("data not pushed in database");
                 }
                 else
                     res.send(common_1.send_response(null, false, "Data pushed in database!"));
@@ -156,11 +158,11 @@ function resetPassword(req, res) {
                                 }
                                 else {
                                     if (params.new_password !== params.confirm_password) {
-                                        res.send(common_1.send_response(null, true, 'Password do not match. Try again!'));
+                                        res.send(common_1.send_response(null, true, "Password do not match. Try again!"));
                                     }
                                     else {
                                         user.password = params.new_password;
-                                        console.log('user.password is(changed):' + user.password);
+                                        console.log("user.password is(changed):" + user.password);
                                         user.save(function (err, user) {
                                             if (err) {
                                                 res.send(common_1.send_response(null, true, err.message));
@@ -178,7 +180,7 @@ function resetPassword(req, res) {
                                                         delete user.password;
                                                         res.send(common_1.send_response(null, false, "Your password is changed successfully now you can login with new password from the app."));
                                                         // res.send(send_response(user, false, "password changed!"));
-                                                        console.log('Password successfully changed!!');
+                                                        console.log("Password successfully changed!!");
                                                     }
                                                 });
                                             }
@@ -285,9 +287,9 @@ exports.welcome_user = welcome_user;
 function register_user(req, res) {
     var Model = mongoose.model("User");
     var data = req.body;
-    console.log('password: ' + data.password);
+    console.log("password: " + data.password);
     if (!data.email || !data.password || !data.confirm_password) {
-        res.send(common_1.send_response(null, true, "Please enter email and password"));
+        res.send(common_1.send_response(null, true, "Please enter email and password and confirm password"));
     }
     else {
         if (data.password !== data.confirm_password) {

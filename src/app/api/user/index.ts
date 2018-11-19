@@ -4,6 +4,17 @@ import * as express from 'express';
 import * as controller from './user.controller';
 import * as config from '../../config/environment';
 import * as auth from '../../auth/auth.service';
+import * as acl from 'express-acl';
+
+
+let options = {
+    path: 'src/app/config',
+    baseUrl: ['/'],
+    // baseUrl: 'api',
+    defaultRole: 'user'
+};
+
+acl.config(options);
 
 var router = express.Router();
 import * as multer from 'multer';
@@ -16,9 +27,13 @@ router.post('/resetPassword', controller.resetPassword);
 router.post('/welcome_user', controller.welcome_user);
 router.post('/verifytoken', controller.verifytoken);
 router.post('/updatepassword', auth.isAuthenticated(), controller.updatePassword);
+router.get('/acl-test', function(req, res) {
+    res.send('acl is working!!!');
+});
 
 /* For mobile side */
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
 /* END */
+router.use(acl.authorize);
 
 export = router;

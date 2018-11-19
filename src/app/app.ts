@@ -78,8 +78,8 @@ function logger(req, res, next) {
     }
 }
 app.use(cors());
-//app.use(logger);
 
+//app.use(logger);
 
 require('./config/socketio')(socketio); 
 require('./config/express')(app);
