@@ -10,7 +10,6 @@ import * as acl from 'express-acl';
 let options = {
     path: 'src/app/config',
     baseUrl: ['/'],
-    // baseUrl: 'api',
     defaultRole: 'user'
 };
 

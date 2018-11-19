@@ -8,8 +8,9 @@ var common_1 = require("../../common/common");
 // Get list of things
 function get(req, res) {
     var col = req.params.collection;
+    var page = req.query.page;
     var Model = mongoose.model(req.params.collection);
-    Model.find({ $and: [{ $or: [{ is_deleted: false }, { is_deleted: null }] }] }, function (err, annos) {
+    Model.paginate({ $and: [{ $or: [{ is_deleted: false }, { is_deleted: null }] }] }, { page: page, limit: 2 }, function (err, annos) {
         if (err) {
             res.send(common_1.send_response(null, true, common_1.parse_error(err)));
         }
@@ -249,7 +250,7 @@ function destroy(req, res) {
             if (err) {
                 return res.send(common_1.send_response(null, true, common_1.parse_error(err)));
             }
-            return res.status(204).send(common_1.send_response({}));
+            return res.send(common_1.send_response(null, false, "User deleted Successfully!"));
         });
     });
 }
@@ -296,7 +297,9 @@ function executeQuery(req, res) {
     else if (!common_1.isEmpty(search_by) && search_by.keyword && search_by.field) {
         where[search_by.field] = new RegExp('^' + search_by.keyword + '*', "i");
     }
-    var query = Model.find({ $or: [{ is_deleted: false }, { is_deleted: null }] }, fields);
+    var page = req.query.page;
+    console.log("page in execute-query: " + page);
+    var query = Model.paginate({ $or: [{ is_deleted: false }, { is_deleted: null }] }, { page: page, limit: 2 }, fields);
     if (!common_1.isEmpty(where)) {
         query = Model.find(where, fields);
     }

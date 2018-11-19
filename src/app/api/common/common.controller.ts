@@ -4,12 +4,12 @@ import * as validator from 'validator';
 import * as async from 'async';
 import { send_response, parse_error, isEmpty } from '../../common/common';
 
-
 // Get list of things
 export function get (req, res) {
     var col = req.params.collection;
+    var page = req.query.page;
     var Model = mongoose.model(req.params.collection);
-    Model.find({$and: [{$or: [{is_deleted: false}, {is_deleted: null}]}]}, function (err, annos) {
+    Model.paginate({$and: [{$or: [{is_deleted: false}, {is_deleted: null}]}]}, {page:page, limit:2}, function (err, annos) {
         if (err) {
             res.send(send_response(null, true, parse_error(err)));
         } else {
@@ -17,6 +17,7 @@ export function get (req, res) {
         }
     }
     );
+    
 };
 
 // Get a single thing
@@ -234,7 +235,7 @@ export function destroy (req, res) {
             if (err) {
                 return res.send(send_response(null, true, parse_error(err)));
             }
-            return res.status(204).send(send_response({}));
+            return res.send(send_response(null, false, "User deleted Successfully!"));
         });
     });
 };
@@ -281,7 +282,6 @@ export function executeQuery (req, res) {
         
         where[search_by.field] = new RegExp('^' + search_by.keyword + '*', "i");
     }
-
     var query = Model.find({$or: [{is_deleted: false}, {is_deleted: null}]}, fields);
     if (!isEmpty(where)) {
         query = Model.find(where, fields);
@@ -304,7 +304,7 @@ export function executeQuery (req, res) {
         query = query.skip(limit.skip).limit(limit.limit);
     }
     if (count === true) {
-        query.count().exec(function (err, annos) {
+        query.count().exec( function (err, annos) {
             if (err) {
                 res.send(send_response(null, true, parse_error(err)));
             } else {
@@ -314,7 +314,7 @@ export function executeQuery (req, res) {
             }
         });
     } else {
-        query.exec(function (err, annos) {
+        query.exec( function (err, annos) {
             if (err) {
                 res.send(send_response(null, true, parse_error(err)));
             } else {

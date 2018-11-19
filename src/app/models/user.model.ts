@@ -9,6 +9,7 @@ import * as mongoH from 'mongoose-hidden';
 let mongooseHidden = (mongoH)({defaultHidden: {password: true}});
 import * as _ from 'lodash';
 import { userInfo } from 'os';
+import * as mongoosePaginate from 'mongoose-paginate';
 
 var schemaOptions = {
    toObject: {virtuals: true},
@@ -203,6 +204,9 @@ UserSchema.methods = {
    }
 };
 
+
+UserSchema.plugin(mongoosePaginate);
+ForgotPasswordSchema.plugin(mongoosePaginate);
 // export = mongoose.model('User', UserSchema);
 
 // export = mongoose.model('Forgotpassword', ForgotPasswordSchema);

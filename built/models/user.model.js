@@ -7,6 +7,7 @@ var crypto = require("crypto");
 var authTypes = ['github', 'twitter', 'facebook', 'google'];
 var mongoH = require("mongoose-hidden");
 var mongooseHidden = (mongoH)({ defaultHidden: { password: true } });
+var mongoosePaginate = require("mongoose-paginate");
 var schemaOptions = {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
@@ -181,6 +182,8 @@ UserSchema.methods = {
         return pwd;
     }
 };
+UserSchema.plugin(mongoosePaginate);
+ForgotPasswordSchema.plugin(mongoosePaginate);
 // export = mongoose.model('User', UserSchema);
 // export = mongoose.model('Forgotpassword', ForgotPasswordSchema);
 exports.default = {
