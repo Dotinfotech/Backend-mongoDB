@@ -5,10 +5,10 @@
 
 'use strict';
 // Insert seed models below
-import {default as User} from '../models/user.model';
+import models from '../models/user.model';
 // Create Default Admin
 
-var admin = new User({
+var admin = new models.User({
     first_name: 'Admin',
     last_name: 'now',
     user_name: "admin",
@@ -19,10 +19,10 @@ var admin = new User({
     phone_number: '9898245452',
     is_verify: true
 });
-User.create(admin, function (err, user) {
+models.User.create(admin, function (err, user) {
     if (err) {
         console.log("Error creating default admin : " + err);
     } else {
         console.log("Default Admin Created");
     }
-})
+});

@@ -1,9 +1,13 @@
-export function setup (User, config) {
-  var passport = require('passport');
-  var twitter = require('passport-twitter');
-  let TwitterStrategy = twitter.Strategy;
+var passport = require('passport');
+var twitter = require('passport-twitter');
+let TwitterStrategy = twitter.Strategy;
 
+export function setup (User, config) {
+  
+  config = config.default;
+  
   passport.use(new TwitterStrategy({
+
     consumerKey: config.twitter.clientID,
     consumerSecret: config.twitter.clientSecret,
     callbackURL: config.twitter.callbackURL

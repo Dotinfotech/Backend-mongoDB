@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // You will need to set these on the server you deploy to.
 exports.default = {
     DOMAIN: 'http://anydomainhere.com/',
-    CLIENT_URL: 'http://anydomainhere.com/',
+    CLIENT_URL: 'http://localhost:9000',
     SESSION_SECRET: "dotwhitelable-secret",
     FACEBOOK_ID: 'app-id',
     FACEBOOK_SECRET: 'secret',

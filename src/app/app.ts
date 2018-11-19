@@ -11,7 +11,7 @@ process.env.TZ = 'Asia/Kolkata';
 
 import * as express from 'express';
 import * as mongoose from 'mongoose';
-import { default as config } from './config/environment';
+import config from './config/environment';
 import * as cors from 'cors';
 import * as http_mod from 'http';
 import * as socketIo_mod from 'socket.io';
@@ -78,8 +78,8 @@ function logger(req, res, next) {
     }
 }
 app.use(cors());
-//app.use(logger);
 
+//app.use(logger);
 
 require('./config/socketio')(socketio); 
 require('./config/express')(app);

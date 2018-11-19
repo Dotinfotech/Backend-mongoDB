@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var passport = require("passport");
 var local = require("passport-local");
 var LocalStrategy = local.Strategy;
+var user_model_1 = require("../../models/user.model");
 function setup(User, config) {
     passport.use(new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password' // this is the virtual field on the model
     }, function (email, password, done) {
-        User.findOne({
+        user_model_1.default.User.findOne({
             email: email
         }, function (err, user) {
             if (err)

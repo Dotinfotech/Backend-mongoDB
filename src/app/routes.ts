@@ -3,7 +3,6 @@
  */
 
 'use strict';
-
 import * as path from 'path';
 
 module.exports = function (app) {
