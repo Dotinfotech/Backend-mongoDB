@@ -2,7 +2,9 @@
 var express = require("express");
 var controller = require("./common.controller");
 var auth = require("../../auth/auth.service");
+var acl = require("express-acl");
 var router = express.Router();
+router.use(acl.authorize);
 router.get('/:collection', auth.isAuthenticated(), controller.get);
 router.get('/:collection/:id', auth.isAuthenticated(), controller.getById);
 router.get('/:collection/getbyuser/:user', auth.isAuthenticated(), controller.getByUser);

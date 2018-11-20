@@ -4,15 +4,15 @@ var controller = require("./user.controller");
 var auth = require("../../auth/auth.service");
 var acl = require("express-acl");
 var options = {
-    path: 'src/app/config',
-    baseUrl: ['/'],
-    // baseUrl: 'api',
+    path: 'src/app/config/',
+    baseUrl: '/',
     defaultRole: 'user'
 };
 acl.config(options);
 var router = express.Router();
 var multer = require("multer");
 var upload = multer({ dest: './public/upload/' });
+router.use(acl.authorize);
 router.post('/register', controller.register_user);
 router.post('/forgotpassword', controller.forgotpassword);
 router.post('/register_verify', controller.register_verify);
@@ -25,6 +25,4 @@ router.get('/acl-test', function (req, res) {
 });
 /* For mobile side */
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
-/* END */
-router.use(acl.authorize);
 module.exports = router;

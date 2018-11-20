@@ -8,8 +8,8 @@ import * as acl from 'express-acl';
 
 
 let options = {
-    path: 'src/app/config',
-    baseUrl: ['/'],
+    path: 'src/app/config/',
+    baseUrl: '/',
     defaultRole: 'user'
 };
 
@@ -18,6 +18,7 @@ acl.config(options);
 var router = express.Router();
 import * as multer from 'multer';
 var upload = multer({dest: './public/upload/'});
+router.use(acl.authorize);
 
 router.post('/register', controller.register_user);
 router.post('/forgotpassword', controller.forgotpassword);
@@ -33,6 +34,5 @@ router.get('/acl-test', function(req, res) {
 /* For mobile side */
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
 /* END */
-router.use(acl.authorize);
 
 export = router;

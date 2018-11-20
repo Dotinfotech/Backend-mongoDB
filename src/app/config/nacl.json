@@ -14,8 +14,13 @@
       "group": "user",
       "permissions": [
         {
+          "resource": "*",
+          "methods": "*",
+          "action": "deny"
+        },
+        {
           "resource": "api/user/*",
-          "methods": ["PUT", "POST"],
+          "methods": ["POST", "PUT", "DELETE"],
           "action": "deny"
         },
         {
@@ -27,7 +32,13 @@
           "resource": "auth/*",
           "methods": ["POST"],
           "action": "allow"
+        },
+        {
+          "resource": "api/query/*",
+          "methods": ["GET"],
+          "action": "allow"
         }
+        
       ]
     }
   ]

@@ -4,8 +4,10 @@ import * as express from 'express';
 import * as controller from './common.controller';
 import * as config from '../../config/environment';
 import * as auth from '../../auth/auth.service';
+import * as acl from "express-acl";
 
 var router = express.Router();
+router.use(acl.authorize);
 
 router.get('/:collection', auth.isAuthenticated(), controller.get);
 router.get('/:collection/:id', auth.isAuthenticated(), controller.getById);

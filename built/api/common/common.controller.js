@@ -297,9 +297,7 @@ function executeQuery(req, res) {
     else if (!common_1.isEmpty(search_by) && search_by.keyword && search_by.field) {
         where[search_by.field] = new RegExp('^' + search_by.keyword + '*', "i");
     }
-    var page = req.query.page;
-    console.log("page in execute-query: " + page);
-    var query = Model.paginate({ $or: [{ is_deleted: false }, { is_deleted: null }] }, { page: page, limit: 2 }, fields);
+    var query = Model.find({ $or: [{ is_deleted: false }, { is_deleted: null }] }, fields);
     if (!common_1.isEmpty(where)) {
         query = Model.find(where, fields);
     }
