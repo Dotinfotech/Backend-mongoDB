@@ -3,7 +3,7 @@
 Backend microservices api demo.
 Essential features of login panel: User Registration , User Login, Forgot Password, Update Password; all done in Node.js with Express and MongoDB.
 
-**User Authentication** enabled using [Passport](https://www.npmjs.com/package/passport)
+**User Authentication** enabled using [Passport](http://www.passportjs.org/)
 
 **Role Based Access Control** on the routes and can be configured accroding to need to provide limited access based on the role of user.
 
