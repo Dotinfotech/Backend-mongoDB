@@ -77,7 +77,7 @@ typings/
 
 #built folder
 built/
-#package-lock.json file
+# package-lock.json file
 package-lock.json
 
 #vscode file

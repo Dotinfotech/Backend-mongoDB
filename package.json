@@ -43,6 +43,7 @@
     "passport-twitter": "^1.0.4",
     "path": "^0.12.7",
     "socket.io": "^2.1.1",
+    "swagger-jsdoc": "^3.2.3",
     "time-grunt": "^1.4.0",
     "validator": "^10.8.0"
   },

@@ -20,12 +20,12 @@
         },
         {
           "resource": "api/user/*",
-          "methods": ["POST", "PUT", "DELETE"],
+          "methods": ["PUT", "DELETE"],
           "action": "deny"
         },
         {
           "resource": "api/user/*",
-          "methods": ["GET"],
+          "methods": ["GET", "POST"],
           "action": "allow"
         },
         {
