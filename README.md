@@ -3,7 +3,7 @@
 Backend microservices api demo.
 Essential features of login panel: User Registration , User Login, Forgot Password, Update Password; all done in Node.js with Express and MongoDB.
 
-[**Swagger-Ui**](https://swagger.io/) used to visualize the application.
+[**Swagger-Ui**](https://swagger.io/) is used to visualize the application.
 
 **User Authentication** enabled using [Passport](http://www.passportjs.org/)
 
