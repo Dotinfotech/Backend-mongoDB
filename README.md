@@ -3,6 +3,8 @@
 Backend microservices api demo.
 Essential features of login panel: User Registration , User Login, Forgot Password, Update Password; all done in Node.js with Express and MongoDB.
 
+[**Swagger-Ui**](https://swagger.io/) used to visualize the application.
+
 **User Authentication** enabled using [Passport](http://www.passportjs.org/)
 
 **Role Based Access Control** on the routes and can be configured accroding to need to provide limited access based on the role of user.
@@ -28,6 +30,7 @@ Essential features of login panel: User Registration , User Login, Forgot Passwo
 ### References
 * For learning more about ACL library used here: [express-acl](https://www.npmjs.com/package/express-acl)
 * Library used for [pagination](https://www.npmjs.com/package/mongoose-paginate)
+* Library used for swagger-docs: [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc)
 
 
 
