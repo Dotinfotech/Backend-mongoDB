@@ -17,8 +17,6 @@ router.post('/welcome_user', controller.welcome_user);
 router.post('/verifytoken', controller.verifytoken);
 router.post('/updatepassword', auth.isAuthenticated(), controller.updatePassword);
 
-
-console.log('testing for git');
 /* For mobile side */
 router.post('/upload/avatar', auth.isAuthenticated(), upload.single('file'), controller.uploadpic);
 /* END */
