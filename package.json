@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "ava": "^0.15.2",
-    "codecov": "^1.0.1",
+    "codecov": "^3.7.1",
     "connect-livereload": "^0.4.1",
     "coveralls": "^2.11.11",
     "grunt": "~0.4.4",
